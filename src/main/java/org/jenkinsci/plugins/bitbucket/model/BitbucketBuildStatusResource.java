@@ -33,7 +33,7 @@ public class BitbucketBuildStatusResource {
     private final String commitId;
     private final String bitbucketHost;
 
-    public BitbucketBuildStatusResource(String bitbucketHost, String owner, String repoSlug, String commitId) {
+    public BitbucketBuildStatusResource(String owner, String repoSlug, String commitId, String bitbucketHost) {
         this.owner = owner;
         this.repoSlug = repoSlug;
         this.commitId = commitId;
