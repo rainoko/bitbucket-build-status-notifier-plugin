@@ -24,17 +24,18 @@
 
 package org.jenkinsci.plugins.bitbucket.validator;
 
-import com.google.common.collect.ImmutableSet;
-import java.util.Set;
+import java.util.logging.Logger;
 
 public class BitbucketHostValidator {
-    final Set<String> supportedDomains = ImmutableSet.of("bitbucket.org", "altssh.bitbucket.org");
+  private static final Logger logger = Logger.getLogger(BitbucketHostValidator.class.getName());
 
-    public boolean isValid(final String $value) {
-        return this.supportedDomains.contains($value);
-    }
+  public boolean isValid(final String value, final String configuredHost) {
+    String host = configuredHost.replaceAll("https?://", "");
+    logger.info("Host for check " + value + ", valid: " + value.contains(host));
+    return value.contains(host);
+  }
 
-    public String renderError() {
-        return "Bitbucket build notifier support only repositories hosted in bitbucket.org";
-    }
+  public String renderError(String bitbucketHost) {
+    return "Bitbucket build notifier support only repositories hosted in " + bitbucketHost;
+  }
 }

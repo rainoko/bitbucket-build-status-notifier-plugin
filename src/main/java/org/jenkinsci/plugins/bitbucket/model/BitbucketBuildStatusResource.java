@@ -24,27 +24,27 @@
 
 package org.jenkinsci.plugins.bitbucket.model;
 
-import org.scribe.model.Verb;
-
 public class BitbucketBuildStatusResource {
 
-    private static final String API_ENDPOINT = "https://api.bitbucket.org/2.0/";
+//    private static final String API_ENDPOINT = "https://bitbucket.atlassian.teliacompany.net";
 
     private final String owner;
     private final String repoSlug;
     private final String commitId;
+    private final String bitbucketHost;
 
-    public BitbucketBuildStatusResource(String owner, String repoSlug, String commitId) {
+    public BitbucketBuildStatusResource(String bitbucketHost, String owner, String repoSlug, String commitId) {
         this.owner = owner;
         this.repoSlug = repoSlug;
         this.commitId = commitId;
+        this.bitbucketHost = bitbucketHost;
     }
 
-    public String generateUrl(Verb verb) throws Exception {
-        if (verb.equals(Verb.POST)) {
-            return API_ENDPOINT + "repositories/" + this.owner + "/" + this.repoSlug + "/commit/" + this.commitId + "/statuses/build";
+    public String generateUrl(String verb) throws Exception {
+        if (verb.equals("POST")) {
+            return bitbucketHost + "/rest/build-status/1.0/commits/" + this.commitId;
         } else {
-            throw new Exception("Verb " + verb.toString() + "not allowed or implemented");
+            throw new Exception("Verb " + verb + "not allowed or implemented");
         }
     }
 
@@ -58,5 +58,9 @@ public class BitbucketBuildStatusResource {
 
     public String getRepoSlug() {
         return this.repoSlug;
+    }
+
+    public String getBitbucketHost() {
+        return this.bitbucketHost;
     }
 }

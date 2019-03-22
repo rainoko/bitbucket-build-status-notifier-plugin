@@ -31,6 +31,7 @@ import hudson.plugins.git.util.BuildData;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -54,7 +55,19 @@ public class GitScmAdapter implements ScmAdapter {
         }
 
         HashMap<String, URIish> commitRepoMap = new HashMap<String, URIish>();
-        BuildData buildData = build.getAction(BuildData.class);
+        List<BuildData> actions = build.getActions(BuildData.class);
+        BuildData buildData = null;
+        for (BuildData action : actions) {
+            List<URIish> urIs = repoList.get(0).getURIs();
+            logger.info("Repo urls:" + urIs);
+            for (String remoteUrl : action.getRemoteUrls()) {
+                logger.info("Action remote url: "+ remoteUrl);
+                if(remoteUrl.equals(urIs.get(0).toString())) {
+                    logger.info("Action and git match: "+ remoteUrl);
+                    buildData = action;
+                }
+            }
+        }
         if (buildData == null || buildData.getLastBuiltRevision() == null) {
             logger.warning("Build data could not be found");
         } else {
